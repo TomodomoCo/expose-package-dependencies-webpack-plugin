@@ -1,0 +1,10 @@
+# Compiled files and dependencies
+node_modules/
+
+# Hidden files, caches, and misc.
+.sass-cache
+.DS_Store
+cache
+.cache
+npm-debug.log
+__init__.py

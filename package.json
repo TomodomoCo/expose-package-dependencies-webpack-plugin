@@ -1,0 +1,19 @@
+{
+  "name": "@tomodomoco/expose-package-dependencies-webpack-plugin",
+  "version": "1.0.0",
+  "description": "Expose Package Dependencies Webpack Plugin",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TomodomoCo/expose-package-dependencies-webpack-plugin.git"
+  },
+  "author": "Chris Van Patten",
+  "license": "MIT",
+  "files": [
+    "index.js"
+  ],
+  "main": "src/index.js",
+  "dependencies": {
+    "webpack-sources": "^1.4.0",
+    "lodash": "^4.17.0"
+  }
+}
