@@ -46,9 +46,19 @@ class ExposePackageDependenciesWebpackPlugin {
 					const packageDepsFilename = packageData.main.replace( /\.js$/i, extension );
 					const packageDeps = require( `${packageName}/${packageDepsFilename}` );
 
-					if ( ! Array.isArray( packageDeps ) ) {
-						return;
+          let dependencies = [];
+
+          if ( Array.isArray( packageDeps.dependencies || null ) ) {
+            dependencies = packageDeps.dependencies;
+          }
+
+					if ( Array.isArray( packageDeps ) ) {
+            dependencies = packageDeps;
 					}
+
+          if ( dependencies.length < 1 ) {
+            return;
+          }
 
 					// Merge the package dependencies into the consumer's dependencies.
 					deps = union( deps, packageDeps );
