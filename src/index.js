@@ -16,19 +16,25 @@ class ExposePackageDependenciesWebpackPlugin {
 				const [ filename, query ] = entrypointName.split( '?', 2 );
 
 				// Get the name of the dependency file.
-				const depsFilename = compilation.getPath( outputFilename, {
+				const buildFilename = compilation.getPath( outputFilename, {
 					chunk: entrypoint.getRuntimeChunk(),
 					filename,
 					query,
 					basename: basename( filename ),
-				} ).replace( /\.js$/i, '.deps.json' );
+        } );
 
-				const asset = compilation.assets[ depsFilename ] || null;
+        // We have to jump through some hoops here because WordPress changed the dependency file format.
+        const oldAssetFilename = buildFilename.replace( /\.js$/i, '.deps.json' );
+        const newAssetFilename = buildFilename.replace( /\.js$/i, '.asset.json' );
 
-				// If the deps.json file does not exist, stop here.
-				if ( asset === null ) {
+        const isNew = compilation.assets[ oldAssetFilename ] || null;
+        const isOld = compiliation.assets[ newAssetFilename ] || null;
+
+				if ( isNew === null && isOld === null ) {
 					return;
-				}
+        }
+
+        const extension = ( isNew !== null ) ? '.asset.json' : '.deps.json';
 
 				// Parse the existing source file, so it can be modified.
 				let deps = JSON.parse( asset.source() );
@@ -37,7 +43,7 @@ class ExposePackageDependenciesWebpackPlugin {
 				this.options.packages.forEach( ( packageName ) => {
 					// Get the package's deps.json file.
 					const packageData = require( packageName + '/package.json' );
-					const packageDepsFilename = packageData.main.replace( /\.js$/i, '.deps.json' );
+					const packageDepsFilename = packageData.main.replace( /\.js$/i, extension );
 					const packageDeps = require( `${packageName}/${packageDepsFilename}` );
 
 					if ( ! Array.isArray( packageDeps ) ) {
