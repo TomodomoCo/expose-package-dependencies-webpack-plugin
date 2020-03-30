@@ -71,7 +71,14 @@ class ExposePackageDependenciesWebpackPlugin {
           }
 
           // Merge the package's dependencies into the consumer's dependencies.
-          deps = union( deps, packageDependencies );
+          if ( 'dependencies' in deps ) {
+            deps.dependencies = union( deps.dependencies, packageDependencies ).sort();
+          }
+
+          // Fallback for legacy dependency files.
+          if ( ! 'dependencies' in deps ) {
+            deps = union( deps, packageDependencies ).sort();
+          }
         } );
 
         // Output the result back to the dependency file.
